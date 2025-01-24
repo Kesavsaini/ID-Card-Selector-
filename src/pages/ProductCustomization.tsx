@@ -26,6 +26,7 @@ import lanyard_1 from "@/public/lanyard_1.png"
 import lanyard_2 from "@/public/lanyard_2.png"
 import id_card_1 from "@/public/id_card_1.png"
 import id_card_2 from "@/public/id_card_2.png"
+import { useNavigate } from 'react-router-dom';
 
 const products = [
   {
@@ -135,6 +136,7 @@ const ImageCarousel = ({ images }: { images: string[] }) => {
 
 export default function ProductCustomization() {
   const [selections, setSelections] = useState<Selections>({});
+  const navigate = useNavigate();
 
   const handleSubmit = async () => {
     try {
@@ -168,6 +170,7 @@ export default function ProductCustomization() {
 
       toast.success('Product customization saved successfully!');
       setSelections({});
+      navigate('/thankyou');
     } catch (error) {
       console.error('Error saving product customization:', error);
       toast.error('Failed to save product customization');
