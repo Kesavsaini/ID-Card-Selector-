@@ -39,6 +39,7 @@ const products = [
       Metal_Frame_3
     ],
     options: ['Blue', 'Silver', 'Black', 'Golden', 'Pink'],
+    frameSizes: ['Portrait', 'Landscape'],
   },
   {
     id: 2,
@@ -49,6 +50,7 @@ const products = [
       lanyard_2,
     ],
     options: ['Blue', 'Black', 'Red', 'White', 'Pink', 'Grey'],
+    widths: [16, 20],
   },
   {
     id: 3,
@@ -69,6 +71,8 @@ type Selections = {
     quantity: number;
     cardType?: string;
     cardFinish?: string;
+    frameSize?: 'Portrait' | 'Landscape';
+    lanyardWidth?: number;
   };
 };
 
@@ -159,8 +163,10 @@ export default function ProductCustomization() {
         {
           holder_type: selections[1]?.option,
           holder_quantity: selections[1]?.quantity,
+          orientation: selections[1]?.frameSize,
           lanyard_color: selections[2]?.option,
           lanyard_quantity: selections[2]?.quantity,
+          lanyard_width: selections[2]?.lanyardWidth,
           card_type: selections[3]?.cardType,
           card_finish: selections[3]?.cardFinish,
         },
@@ -179,7 +185,7 @@ export default function ProductCustomization() {
 
   const updateSelection = (
     id: number,
-    field: 'option' | 'quantity' | 'cardType' | 'cardFinish',
+    field: 'option' | 'quantity' | 'cardType' | 'cardFinish' | 'frameSize' | 'lanyardWidth',
     value: string | number
   ) => {
     setSelections((prev) => ({
@@ -218,7 +224,7 @@ export default function ProductCustomization() {
                       <div>
                         <Label className="text-primary">Card Type</Label>
                         <Select
-                          value={selections[product.id]?.cardType}
+                          value={selections[product.id]?.cardType || ''}
                           onValueChange={(value) => updateSelection(product.id, 'cardType', value)}
                         >
                           <SelectTrigger className="border-primary/20 focus:border-primary">
@@ -236,7 +242,7 @@ export default function ProductCustomization() {
                       <div>
                         <Label className="text-primary">Card Finish</Label>
                         <Select
-                          value={selections[product.id]?.cardFinish}
+                          value={selections[product.id]?.cardFinish || ''}
                           onValueChange={(value) => updateSelection(product.id, 'cardFinish', value)}
                         >
                           <SelectTrigger className="border-primary/20 focus:border-primary">
@@ -254,23 +260,65 @@ export default function ProductCustomization() {
                     </div>
                   ) : (
                     <div className="space-y-4">
-                      <div>
-                        <Label className="text-primary">Color</Label>
-                        <Select
-                          value={selections[product.id]?.option}
-                          onValueChange={(value) => updateSelection(product.id, 'option', value)}
-                        >
-                          <SelectTrigger className="border-primary/20 focus:border-primary">
-                            <SelectValue placeholder="Select option" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            {product.options?.map((option) => (
-                              <SelectItem key={option} value={option}>
-                                {option}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
+                      <div className="flex space-x-4">
+                        {product.id === 1 && (
+                          <div className="flex-1">
+                            <Label className="text-primary">Frame Size</Label>
+                            <Select
+                              value={selections[product.id]?.frameSize || ''}
+                              onValueChange={(value) => updateSelection(product.id, 'frameSize', value)}
+                            >
+                              <SelectTrigger className="border-primary/20 focus:border-primary">
+                                <SelectValue placeholder="Select frame size" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                {product.frameSizes?.map((option) => (
+                                  <SelectItem key={option} value={option}>
+                                    {option}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                          </div>
+                        )}
+                        {product.id === 2 && (
+                          <div className="flex-1">
+                            <Label className="text-primary">Width</Label>
+                            <Select
+                              value={selections[product.id]?.lanyardWidth?.toString() || ''}
+                              onValueChange={(value) => updateSelection(product.id, 'lanyardWidth', parseInt(value))}
+                            >
+                              <SelectTrigger className="border-primary/20 focus:border-primary">
+                                <SelectValue placeholder="Select width" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                {product.widths?.map((option) => (
+                                  <SelectItem key={option} value={option.toString()}>
+                                    {option} mm
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                          </div>
+                        )}
+                        <div className="flex-1">
+                          <Label className="text-primary">Color</Label>
+                          <Select
+                            value={selections[product.id]?.option || ''}
+                            onValueChange={(value) => updateSelection(product.id, 'option', value)}
+                          >
+                            <SelectTrigger className="border-primary/20 focus:border-primary">
+                              <SelectValue placeholder="Select option" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {product.options?.map((option) => (
+                                <SelectItem key={option} value={option}>
+                                  {option}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                        </div>
                       </div>
                       <div>
                         <Label className="text-primary">Quantity</Label>
